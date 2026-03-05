@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import joblib
+import pickle
 
 # -------------------------------
 # Page Configuration
@@ -16,7 +16,8 @@ st.set_page_config(
 # -------------------------------
 @st.cache_resource
 def load_model():
-    model = joblib.load("model/insurance_model.pkl")
+    with open("model/insurance_model.pkl", "rb") as file:
+        model = pickle.load(file)
     return model
 
 model = load_model()
@@ -25,7 +26,7 @@ model = load_model()
 # App Title
 # -------------------------------
 st.title("💰 Medical Insurance Cost Prediction")
-st.write("Predict insurance charges using a trained Linear Regression model.")
+st.write("Predict insurance charges using a trained Machine Learning model.")
 
 st.markdown("---")
 
@@ -45,11 +46,10 @@ region = st.selectbox(
 )
 
 # -------------------------------
-# Prediction Button
+# Prediction
 # -------------------------------
 if st.button("Predict Insurance Charges"):
 
-    # Create DataFrame from input
     input_data = pd.DataFrame({
         "age": [age],
         "sex": [sex],
@@ -59,33 +59,34 @@ if st.button("Predict Insurance Charges"):
         "region": [region]
     })
 
-    # Make prediction
     prediction = model.predict(input_data)[0]
 
     st.markdown("---")
-    st.subheader("💵 Predicted Insurance Charges:")
+    st.subheader("💵 Predicted Insurance Charges")
     st.success(f"${prediction:,.2f}")
 
-    # Extra insight
     if smoker == "yes":
         st.warning("Smoking significantly increases insurance costs.")
     else:
         st.info("Non-smokers typically have lower insurance costs.")
 
-
 st.markdown("---")
+
+# -------------------------------
+# Author Section
+# -------------------------------
 st.markdown("""
 ### 👨‍💻 Author  
-**Md. Nazmul Hossain**  
+**Md. Nazmul Hossain**
 
-🔗 [GitHub](https://github.com/nazmul-1117/)  
-🔗 [LinkedIn](https://linkedin.com/in/yourprofile)  
-🌐 [Portfolio](https://nazmul-1117.github.io)
+🔗 GitHub: https://github.com/nazmul-1117  
+🔗 LinkedIn: https://linkedin.com/in/yourprofile  
+🌐 Portfolio: https://nazmul-1117.github.io
 """)
+
 st.markdown("---")
 
 # -------------------------------
 # Footer
 # -------------------------------
 st.write("Md. Nazmul Hossain © 2026")
-st.markdown("---")

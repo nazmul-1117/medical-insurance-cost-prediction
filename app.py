@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import pickle
+import joblib
 
 # -------------------------------
 # Page Configuration
@@ -16,8 +16,7 @@ st.set_page_config(
 # -------------------------------
 @st.cache_resource
 def load_model():
-    with open("model/insurance_model.pkl", "rb") as file:
-        model = pickle.load(file)
+    model = joblib.load("model/insurance_model.pkl")
     return model
 
 model = load_model()
